@@ -1,12 +1,19 @@
 spring:
+    config:
+        import: optional:file:.env[.properties]
+
     application:
         name: playmatch-api
 
     neo4j:
-        uri: ${NEO4J_URI:bolt://localhost:7687}
+        uri: ${NEO4J_URI}
         authentication:
-            username: ${NEO4J_USERNAME:neo4j}
+            username: ${NEO4J_USERNAME}
             password: ${NEO4J_PASSWORD}
+
+rawg:
+    base-url: https://api.rawg.io/api
+    api-key: ${RAWG_API_KEY}
 
 management:
     endpoints:

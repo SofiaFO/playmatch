@@ -1,7 +1,7 @@
 package com.playmatch.jogo.application;
 
 
-import com.playmatch.jogo.exception.JogoNaoEncontradoException;
+import com.playmatch.shared.infrastructure.exception.JogoNaoEncontradoException;
 import com.playmatch.jogo.infrastructure.JogoRepository;
 import com.playmatch.jogo.infrastructure.dto.JogoResponse;
 import lombok.RequiredArgsConstructor;

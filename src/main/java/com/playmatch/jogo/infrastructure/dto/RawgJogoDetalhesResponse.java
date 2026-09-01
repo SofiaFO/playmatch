@@ -1,21 +1,26 @@
-package com.playmatch.jogo.infrastructure.client.rawg.dto;
+package com.playmatch.jogo.infrastructure.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.playmatch.jogo.infrastructure.client.rawg.dto.RawGeneroResponse;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Record {NAME}
+ * The DTO RawgJogoDetalhesResponse
  *
  * @author Sofia Ferreira de Oliveira
- * @since 27/08/2026
+ * @since 01/09/2026
  */
-public record RawgJogoResponse(
+public record RawgJogoDetalhesResponse(
+
         Long id,
 
         String name,
+
+        @JsonProperty("description_raw")
+        String description,
 
         LocalDate released,
 
@@ -26,6 +31,7 @@ public record RawgJogoResponse(
 
         List<RawGeneroResponse> genres,
 
-        List<RawPlataformaResponse> platforms
+        List<RawJogoPlataformaResponse> platforms
+
 ) {
 }

@@ -1,4 +1,4 @@
-package com.playmatch.jogo.exception;
+package com.playmatch.shared.infrastructure.exception;
 
 /**
  * The Exception JogoNaoEncontradoException

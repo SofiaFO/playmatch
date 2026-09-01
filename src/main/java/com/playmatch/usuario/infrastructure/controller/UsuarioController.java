@@ -1,15 +1,15 @@
 package com.playmatch.usuario.infrastructure.controller;
 
 import com.playmatch.usuario.application.AvaliarJogoService;
+import com.playmatch.usuario.application.ListarAvaliacaoService;
+import com.playmatch.usuario.infrastructure.dto.AvaliacaoResponse;
 import com.playmatch.usuario.infrastructure.dto.AvaliarJogoRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * The Controller UsuarioController
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController {
 
     private final AvaliarJogoService avaliarJogoService;
+    private final ListarAvaliacaoService listarAvaliacaoService;
 
     @PostMapping("/{usuarioId}/avaliacoes")
     public ResponseEntity<Void> avaliarJogo(
@@ -32,5 +33,10 @@ public class UsuarioController {
         avaliarJogoService.executar(usuarioId, request);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{usuarioId}/avaliacoes")
+    public List<AvaliacaoResponse> listarAvaliacoes(@PathVariable Long usuarioId){
+        return listarAvaliacaoService.execute(usuarioId);
     }
 }

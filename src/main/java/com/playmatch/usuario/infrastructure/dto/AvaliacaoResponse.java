@@ -1,6 +1,8 @@
 package com.playmatch.usuario.infrastructure.dto;
 
 
+import com.playmatch.usuario.domain.Avaliacao;
+
 /**
  * The Record AvaliacaoResponse
  *
@@ -12,4 +14,12 @@ public record AvaliacaoResponse(
         String nomeJogo,
         Integer nota
 ) {
+
+    public static AvaliacaoResponse fromDomain(Avaliacao avaliacao) {
+        return new AvaliacaoResponse(
+                avaliacao.getJogo().getId(),
+                avaliacao.getJogo().getNome(),
+                avaliacao.getNota()
+        );
+    }
 }

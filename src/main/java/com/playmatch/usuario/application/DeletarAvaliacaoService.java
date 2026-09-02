@@ -1,39 +1,37 @@
 package com.playmatch.usuario.application;
 
+
+import com.playmatch.jogo.infrastructure.JogoRepository;
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Usuario;
 import com.playmatch.usuario.infrastructure.UsuarioRepository;
-import com.playmatch.usuario.infrastructure.dto.AvaliacaoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
- * The Domain Class ListarAvaliacaoService
+ * The Domain Class DeletarAvaliacaoService
  *
  * @author Sofia Ferreira de Oliveira
- * @since 01/09/2026
+ * @since 02/09/2026
  */
 
 @Service
 @RequiredArgsConstructor
-public class ListarAvaliacaoService {
+public class DeletarAvaliacaoService {
 
     private final UsuarioRepository usuarioRepository;
+    private final JogoRepository jogoRepository;
 
-    public List<AvaliacaoResponse> execute(Long usuarioId){
+    public void executar(Long usuarioId, Long jogoId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
-        return usuario.getAvaliacoes()
-                .stream()
-                .map(avaliacao -> new AvaliacaoResponse(
-                        avaliacao.getJogo().getId(),
-                        avaliacao.getJogo().getNome(),
-                        avaliacao.getNota()
-                    ))
-                .toList();
+        jogoRepository.findById(jogoId)
+                .orElseThrow(() -> new BusinessException("Jogo não encontrado", HttpStatus.NOT_FOUND));
+
+        usuario.deletarAvaliacao(jogoId);
+
+        usuarioRepository.save(usuario);
     }
 }

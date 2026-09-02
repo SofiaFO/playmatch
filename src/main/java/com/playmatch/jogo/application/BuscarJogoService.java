@@ -1,10 +1,11 @@
 package com.playmatch.jogo.application;
 
 
-import com.playmatch.shared.infrastructure.exception.JogoNaoEncontradoException;
+import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.jogo.infrastructure.JogoRepository;
 import com.playmatch.jogo.infrastructure.dto.JogoResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,6 +24,6 @@ public class BuscarJogoService {
     public JogoResponse executar(Long id){
         return repository.findById(id)
                 .map(JogoResponse::fromDomain)
-                .orElseThrow(()-> new JogoNaoEncontradoException(id));
+                .orElseThrow(()-> new BusinessException("Jogo não encontrado", HttpStatus.NOT_FOUND));
     }
 }

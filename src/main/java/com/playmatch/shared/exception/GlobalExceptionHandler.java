@@ -1,4 +1,4 @@
-package com.playmatch.shared.infrastructure.exception;
+package com.playmatch.shared.exception;
 
 import com.playmatch.shared.infrastructure.dto.ErroResponse;
 import jakarta.servlet.http.HttpServletRequest;

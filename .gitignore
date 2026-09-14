@@ -35,3 +35,8 @@ build/
 .env
 
 application-local.yml
+
+# CodeExplorer
+headless/output/
+headless/node_modules/
+headless/target/

@@ -2,8 +2,8 @@ package com.playmatch.jogo.application;
 
 
 import com.playmatch.shared.exception.BusinessException;
-import com.playmatch.jogo.infrastructure.JogoRepository;
 import com.playmatch.jogo.infrastructure.dto.JogoResponse;
+import com.playmatch.jogo.infrastructure.repository.JogoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

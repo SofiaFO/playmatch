@@ -1,16 +1,18 @@
-package com.playmatch.usuario.application;
+package com.playmatch.usuario.application.avaliacao;
 
 
-import com.playmatch.jogo.infrastructure.JogoRepository;
+import com.playmatch.jogo.infrastructure.repository.JogoRepository;
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Usuario;
-import com.playmatch.usuario.infrastructure.UsuarioRepository;
+import com.playmatch.usuario.infrastructure.dto.avaliacao.AtualizarAvaliacaoRequest;
+import com.playmatch.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The Domain Class DeletarAvaliacaoService
+ * The Service Class AtualizarAvaliacaoService
  *
  * @author Sofia Ferreira de Oliveira
  * @since 02/09/2026
@@ -18,19 +20,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DeletarAvaliacaoService {
-
+public class AtualizarAvaliacaoService {
     private final UsuarioRepository usuarioRepository;
     private final JogoRepository jogoRepository;
 
-    public void executar(Long usuarioId, Long jogoId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
+    @Transactional
+    public void executar(AtualizarAvaliacaoRequest request) {
+        Usuario usuario = usuarioRepository.findById(request.usuarioId())
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
-        jogoRepository.findById(jogoId)
+        jogoRepository.findById(request.jogoId())
                 .orElseThrow(() -> new BusinessException("Jogo não encontrado", HttpStatus.NOT_FOUND));
 
-        usuario.deletarAvaliacao(jogoId);
+        usuario.atualizarAvaliacao(request.jogoId(), request.nota());
 
         usuarioRepository.save(usuario);
     }

@@ -1,7 +1,7 @@
 package com.playmatch.jogo.infrastructure.client.rawg;
 
+import com.playmatch.jogo.infrastructure.client.rawg.dto.RawgJogoDetalhesResponse;
 import com.playmatch.jogo.infrastructure.client.rawg.dto.RawgPesquisaResponse;
-import com.playmatch.jogo.infrastructure.dto.RawgJogoDetalhesResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

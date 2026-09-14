@@ -2,8 +2,8 @@ package com.playmatch.jogo.application;
 
 
 import com.playmatch.jogo.domain.Genero;
-import com.playmatch.jogo.infrastructure.JogoRepository;
 import com.playmatch.jogo.infrastructure.dto.JogoResponse;
+import com.playmatch.jogo.infrastructure.repository.JogoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +25,7 @@ public class ListarJogosService {
     private final JogoRepository repository;
 
     public List<JogoResponse> executar() {
-        return StreamSupport
-                .stream(repository.findAll().spliterator(), false)
+        return repository.findAll().stream()
                 .map(jogo -> new JogoResponse(
                         jogo.getId(),
                         jogo.getNome(),

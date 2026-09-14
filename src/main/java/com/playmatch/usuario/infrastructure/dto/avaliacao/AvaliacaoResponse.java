@@ -1,4 +1,4 @@
-package com.playmatch.usuario.infrastructure.dto;
+package com.playmatch.usuario.infrastructure.dto.avaliacao;
 
 
 import com.playmatch.usuario.domain.Avaliacao;

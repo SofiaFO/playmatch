@@ -1,7 +1,4 @@
-package com.playmatch.jogo.infrastructure.dto;
-
-
-import com.playmatch.jogo.infrastructure.client.rawg.dto.RawPlataformaResponse;
+package com.playmatch.jogo.infrastructure.client.rawg.dto;
 
 
 /**

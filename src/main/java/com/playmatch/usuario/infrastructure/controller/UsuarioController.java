@@ -1,18 +1,31 @@
 package com.playmatch.usuario.infrastructure.controller;
 
-import com.playmatch.usuario.application.*;
-import com.playmatch.usuario.infrastructure.dto.AtualizarAvaliacaoRequest;
-import com.playmatch.usuario.infrastructure.dto.AvaliacaoResponse;
-import com.playmatch.usuario.infrastructure.dto.AvaliarJogoRequest;
+import com.playmatch.usuario.application.AtualizarUsuarioService;
+import com.playmatch.usuario.application.BuscarUsuarioService;
+import com.playmatch.usuario.application.CriarUsuarioService;
+import com.playmatch.usuario.application.DeletarUsuarioService;
+import com.playmatch.usuario.application.ListarUsuariosService;
+import com.playmatch.usuario.infrastructure.dto.AtualizarUsuarioRequest;
+import com.playmatch.usuario.infrastructure.dto.CriarUsuarioRequest;
+import com.playmatch.usuario.infrastructure.dto.UsuarioResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
- * The Controller UsuarioController
+ * The Controller Class UsuarioController
  *
  * @author Sofia Ferreira de Oliveira
  * @since 01/09/2026
@@ -22,41 +35,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioController {
 
-    private final AvaliarJogoService avaliarJogoService;
-    private final ListarAvaliacaoService listarAvaliacaoService;
-    private final BuscarAvaliacaoService buscarAvaliacaoService;
-    private final AtualizarAvaliacaoService atualizarAvaliacaoService;
-    private final DeletarAvaliacaoService deletarAvaliacaoService;
+    private final CriarUsuarioService criarUsuarioService;
+    private final AtualizarUsuarioService atualizarUsuarioService;
+    private final BuscarUsuarioService buscarUsuarioService;
+    private final ListarUsuariosService listarUsuariosService;
+    private final DeletarUsuarioService deletarUsuarioService;
 
-    @PostMapping("/{usuarioId}/avaliacoes")
-    public ResponseEntity<Void> avaliarJogo(
-            @PathVariable Long usuarioId,
-            @Valid @RequestBody AvaliarJogoRequest request
-    ) {
-        avaliarJogoService.executar(usuarioId, request);
+    @PostMapping
+    public ResponseEntity<UsuarioResponse> criarUsuario(@Valid @RequestBody CriarUsuarioRequest request) {
+        UsuarioResponse response = criarUsuarioService.executar(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
+    @GetMapping
+    public List<UsuarioResponse> listarUsuarios() {
+        return listarUsuariosService.executar();
+    }
+
+    @GetMapping("/{usuarioId}")
+    public UsuarioResponse buscarUsuario(@PathVariable UUID usuarioId) {
+        return buscarUsuarioService.executar(usuarioId);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> atualizarUsuario(@Valid @RequestBody AtualizarUsuarioRequest request) {
+        atualizarUsuarioService.executar(request);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{usuarioId}/avaliacoes")
-    public List<AvaliacaoResponse> listarAvaliacoes(@PathVariable Long usuarioId){
-        return listarAvaliacaoService.execute(usuarioId);
-    }
-
-    @GetMapping("/{usuarioId}/avaliacoes/{jogoId}")
-    public AvaliacaoResponse buscarAvaliacao(@PathVariable Long usuarioId, @PathVariable Long jogoId) {
-        return buscarAvaliacaoService.executar(usuarioId, jogoId);
-    }
-
-    @PutMapping("/{usuarioId}/avaliacoes/{jogoId}")
-    public ResponseEntity<Void> atualizarAvaliacao(@PathVariable Long usuarioId, @PathVariable Long jogoId, @Valid @RequestBody AtualizarAvaliacaoRequest request) {
-        atualizarAvaliacaoService.executar(usuarioId, jogoId, request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{usuarioId}/avaliacoes/{jogoId}")
-    public ResponseEntity<Void> deletarAvaliacao(@PathVariable Long usuarioId, @PathVariable Long jogoId) {
-        deletarAvaliacaoService.executar(usuarioId, jogoId);
+    @DeleteMapping("/{usuarioId}")
+    public ResponseEntity<Void> deletarUsuario(@PathVariable UUID usuarioId) {
+        deletarUsuarioService.executar(usuarioId);
         return ResponseEntity.noContent().build();
     }
 }

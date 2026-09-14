@@ -1,17 +1,18 @@
-package com.playmatch.usuario.application;
+package com.playmatch.usuario.application.avaliacao;
 
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Usuario;
-import com.playmatch.usuario.infrastructure.UsuarioRepository;
-import com.playmatch.usuario.infrastructure.dto.AvaliacaoResponse;
+import com.playmatch.usuario.infrastructure.dto.avaliacao.AvaliacaoResponse;
+import com.playmatch.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
- * The Domain Class ListarAvaliacaoService
+ * The Service Class ListarAvaliacoesService
  *
  * @author Sofia Ferreira de Oliveira
  * @since 01/09/2026
@@ -19,21 +20,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ListarAvaliacaoService {
+public class ListarAvaliacoesService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public List<AvaliacaoResponse> execute(Long usuarioId){
+    public List<AvaliacaoResponse> executar(UUID usuarioId){
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
         return usuario.getAvaliacoes()
                 .stream()
-                .map(avaliacao -> new AvaliacaoResponse(
-                        avaliacao.getJogo().getId(),
-                        avaliacao.getJogo().getNome(),
-                        avaliacao.getNota()
-                    ))
+                .map(AvaliacaoResponse::fromDomain)
                 .toList();
     }
 }

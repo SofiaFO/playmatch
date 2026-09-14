@@ -1,4 +1,4 @@
-package com.playmatch.jogo.infrastructure;
+package com.playmatch.jogo.infrastructure.repository;
 
 
 import com.playmatch.jogo.domain.Jogo;

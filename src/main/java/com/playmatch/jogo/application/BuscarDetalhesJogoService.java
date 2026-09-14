@@ -3,9 +3,9 @@ package com.playmatch.jogo.application;
 
 import com.playmatch.jogo.infrastructure.client.rawg.RawgClient;
 import com.playmatch.jogo.infrastructure.client.rawg.dto.RawGeneroResponse;
+import com.playmatch.jogo.infrastructure.client.rawg.dto.RawgJogoDetalhesResponse;
 import com.playmatch.jogo.infrastructure.dto.JogoDetalheResponse;
 import com.playmatch.jogo.infrastructure.dto.JogoPesquisaResponse;
-import com.playmatch.jogo.infrastructure.dto.RawgJogoDetalhesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

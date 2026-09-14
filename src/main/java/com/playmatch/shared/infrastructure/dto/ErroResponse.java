@@ -4,7 +4,7 @@ package com.playmatch.shared.infrastructure.dto;
 import java.time.LocalDateTime;
 
 /**
- * The DTO {NAME}
+ * The DTO ErroResponse
  *
  * @author Sofia Ferreira de Oliveira
  * @since 31/08/2026

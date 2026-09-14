@@ -1,19 +1,20 @@
-package com.playmatch.usuario.application;
+package com.playmatch.usuario.application.avaliacao;
 
 
-import com.playmatch.jogo.domain.Jogo;
-import com.playmatch.jogo.infrastructure.JogoRepository;
+import com.playmatch.jogo.infrastructure.repository.JogoRepository;
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Avaliacao;
 import com.playmatch.usuario.domain.Usuario;
-import com.playmatch.usuario.infrastructure.UsuarioRepository;
-import com.playmatch.usuario.infrastructure.dto.AvaliacaoResponse;
+import com.playmatch.usuario.infrastructure.dto.avaliacao.AvaliacaoResponse;
+import com.playmatch.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
- * The Domain Class BuscarAvaliacao
+ * The Service Class BuscarAvaliacaoService
  *
  * @author Sofia Ferreira de Oliveira
  * @since 02/09/2026
@@ -26,7 +27,7 @@ public class BuscarAvaliacaoService {
     private final UsuarioRepository usuarioRepository;
     private final JogoRepository jogoRepository;
 
-    public AvaliacaoResponse executar(Long usuarioId, Long jogoId){
+    public AvaliacaoResponse executar(UUID usuarioId, Long jogoId){
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 

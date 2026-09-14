@@ -1,8 +1,7 @@
-package com.playmatch.jogo.infrastructure.dto;
+package com.playmatch.jogo.infrastructure.client.rawg.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.playmatch.jogo.infrastructure.client.rawg.dto.RawGeneroResponse;
 
 import java.time.LocalDate;
 import java.util.List;

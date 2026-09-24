@@ -31,12 +31,13 @@ public class AtualizarUsuarioService {
         Usuario usuario = usuarioRepository.findById(request.id())
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
-        if (request.email() != null
-                && usuarioRepository.existsByEmailAndIdNot(request.email(), request.id())) {
+        String email = Usuario.normalizarEmail(request.email());
+
+        if (email != null && usuarioRepository.existsByEmailAndIdNot(email, request.id())) {
             throw new BusinessException("Email já cadastrado", HttpStatus.CONFLICT);
         }
 
-        usuario.atualizarDados(request.nome(), request.email());
+        usuario.atualizarDados(request.nome(), email);
 
         usuarioRepository.save(usuario);
     }

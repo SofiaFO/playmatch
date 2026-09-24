@@ -15,6 +15,10 @@ rawg:
     base-url: https://api.rawg.io/api
     api-key: ${RAWG_API_KEY}
 
+jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: ${JWT_EXPIRATION_MS:3600000}
+
 management:
     endpoints:
         web:

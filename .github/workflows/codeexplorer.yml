@@ -5,7 +5,10 @@
 # Diferente do Bitbucket, aqui não instalamos Chromium via apt (o pacote
 # chromium-browser não é mais instalável de forma confiável via apt nos
 # runners ubuntu-latest atuais) — deixamos o Puppeteer baixar seu próprio
-# Chromium durante o `npm install`.
+# Chromium durante o `npm ci`. Esse download (~200MB) é o motivo do "Run npm
+# install" demorar minutos: fica em cache entre execuções (step "Cache
+# Chromium do Puppeteer" abaixo), então só é pago de fato na primeira run ou
+# quando a versão do Puppeteer muda no package-lock.json.
 
 name: CodeExplorer — Visual Snapshot
 
@@ -38,11 +41,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # cache removido — package-lock.json ainda não existe.
-          # Após o primeiro pipeline bem-sucedido, faça commit do
-          # package-lock.json gerado e reative o cache:
-          #   cache: npm
-          #   cache-dependency-path: headless/package-lock.json
+          cache: npm
+          cache-dependency-path: headless/package-lock.json
 
       - name: Build do extrator standalone
         run: mvn package -q -f pom.xml
@@ -50,14 +50,24 @@ jobs:
       - name: Extrair relações e gerar JSON
         run: java -jar target/extractor-cli.jar ../src/main/java output/graph.json
 
+      # A cache do "Setup Node.js" acima só cobre os pacotes npm (node_modules)
+      # — o binário do Chromium que o Puppeteer baixa no postinstall é uma
+      # etapa separada, então precisa da sua própria cache aqui.
+      - name: Cache Chromium do Puppeteer
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: ${{ runner.os }}-puppeteer-${{ hashFiles('headless/package-lock.json') }}
+
       - name: Instalar dependências Node
-        run: npm install
+        run: npm ci
 
       - name: Gerar screenshot
         run: |
           COMMIT=$(echo "${{ github.sha }}" | cut -c1-8)
           DATE=$(date +%Y-%m-%d)
-          node screenshot.js output/graph.json "$COMMIT" "$DATE"
+          MODULE="${{ github.event.repository.name }}"
+          node screenshot.js output/graph.json "$COMMIT" "$DATE" "$MODULE"
           echo "Artefatos gerados:"
           ls -lh output/
 

@@ -43,6 +43,23 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErroResponse> tratarArgumentoInvalido(
+            IllegalArgumentException exception,
+            HttpServletRequest request
+    ) {
+        ErroResponse response = criarErro(
+                HttpStatus.BAD_REQUEST,
+                "Requisição inválida",
+                exception.getMessage(),
+                request
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<ErroResponse> tratarValidacao(
             HandlerMethodValidationException exception,

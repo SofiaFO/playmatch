@@ -15,6 +15,8 @@ import java.util.UUID;
  */
 public interface UsuarioRepository extends Neo4jRepository<Usuario, UUID> {
 
+    Optional<Usuario> findByEmail(String email);
+
     boolean existsByEmail(String email);
 
     boolean existsByEmailAndIdNot(String email, UUID id);

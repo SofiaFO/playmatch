@@ -27,11 +27,13 @@ public class CriarUsuarioService {
 
     public UsuarioResponse executar(CriarUsuarioRequest request){
 
+        String email = Usuario.normalizarEmail(request.email());
+
         Usuario.validarNome(request.nome());
-        Usuario.validarEmail(request.email());
+        Usuario.validarEmail(email);
         Usuario.validarSenha(request.senha());
 
-        if (usuarioRepository.existsByEmail(request.email())) {
+        if (usuarioRepository.existsByEmail(email)) {
             throw new BusinessException("Email já cadastrado", HttpStatus.CONFLICT);
         }
 
@@ -39,12 +41,12 @@ public class CriarUsuarioService {
 
         Usuario usuario = Usuario.builder()
                 .nome(request.nome())
-                .email(request.email())
+                .email(email)
                 .senhaHash(senhaHash)
                 .build();
 
-        usuarioRepository.save(usuario);
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
 
-        return UsuarioResponse.fromDomain(usuario);
+        return UsuarioResponse.fromDomain(usuarioSalvo);
     }
 }

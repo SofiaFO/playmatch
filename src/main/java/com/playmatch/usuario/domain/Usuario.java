@@ -50,6 +50,10 @@ public class Usuario {
     )
     private Set<Avaliacao> avaliacoes = new HashSet<>();
 
+    public static String normalizarEmail(String email) {
+        return email == null ? null : email.trim().toLowerCase();
+    }
+
     public static void validarEmail(String email){
         if (email == null || !Pattern.compile(
                 "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
@@ -63,8 +67,8 @@ public class Usuario {
             throw new IllegalArgumentException("Nome não pode ser vazio.");
         }
 
-        if (!Pattern.compile("^[A-Za-zÀ-ÿ\\s]+$").matcher(nome).matches()) {
-            throw new IllegalArgumentException("Nome deve conter apenas letras e espaços.");
+        if (!Pattern.compile("^[A-Za-zÀ-ÿ'\\-\\s]+$").matcher(nome).matches()) {
+            throw new IllegalArgumentException("Nome deve conter apenas letras, espaços, hífen ou apóstrofo.");
         }
 
         if (nome.trim().length() < 2) {

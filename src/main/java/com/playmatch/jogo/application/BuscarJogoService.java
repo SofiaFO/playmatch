@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 /**
- * The Domain Class BuscarJogo
+ * The Service Class BuscarJogoService
  *
  * @author Sofia Ferreira de Oliveira
  * @since 27/08/2026

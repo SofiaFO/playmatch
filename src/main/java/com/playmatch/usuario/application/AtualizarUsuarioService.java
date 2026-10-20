@@ -1,6 +1,7 @@
 package com.playmatch.usuario.application;
 
 
+import com.playmatch.shared.application.security.UsuarioAutenticado;
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Usuario;
 import com.playmatch.usuario.infrastructure.dto.AtualizarUsuarioRequest;
@@ -9,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 /**
  * The Service Class AtualizarUsuarioService
@@ -24,12 +23,15 @@ import java.util.UUID;
 public class AtualizarUsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioAutenticado usuarioAutenticado;
 
     @Transactional
     public void executar(AtualizarUsuarioRequest request){
 
         Usuario usuario = usuarioRepository.findById(request.id())
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+
+        usuario.validarPermissao(usuarioAutenticado.id());
 
         String email = Usuario.normalizarEmail(request.email());
 

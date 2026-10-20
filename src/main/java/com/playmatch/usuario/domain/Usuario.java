@@ -97,6 +97,15 @@ public class Usuario {
         }
     }
 
+    public void validarPermissao(UUID usuarioAutenticadoId) {
+        if (!Objects.equals(id, usuarioAutenticadoId)) {
+            throw new BusinessException(
+                    "Você não tem permissão para alterar dados de outro usuário",
+                    HttpStatus.FORBIDDEN
+            );
+        }
+    }
+
     public void atualizarDados(String nome, String email) {
         if (nome != null) {
             validarNome(nome);

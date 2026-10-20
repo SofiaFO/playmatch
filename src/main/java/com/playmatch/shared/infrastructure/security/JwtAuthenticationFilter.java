@@ -38,12 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith(PREFIXO_TOKEN)) {
             String token = header.substring(PREFIXO_TOKEN.length());
 
-            if (jwtService.tokenValido(token)) {
-                String email = jwtService.extrairEmail(token);
-
-                var authentication = new UsernamePasswordAuthenticationToken(email, null, List.of());
+            jwtService.extrairUsuarioId(token).ifPresent(usuarioId -> {
+                var authentication = new UsernamePasswordAuthenticationToken(usuarioId, null, List.of());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            });
         }
 
         filterChain.doFilter(request, response);

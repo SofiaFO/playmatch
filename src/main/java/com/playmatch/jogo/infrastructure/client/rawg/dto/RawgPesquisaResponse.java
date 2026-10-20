@@ -13,4 +13,8 @@ public record RawgPesquisaResponse(
         Integer count,
         List<RawgJogoResponse> results
 ) {
+
+    public RawgPesquisaResponse {
+        results = results == null ? List.of() : results;
+    }
 }

@@ -33,4 +33,9 @@ public record RawgJogoDetalhesResponse(
         List<RawJogoPlataformaResponse> platforms
 
 ) {
+
+    public RawgJogoDetalhesResponse {
+        genres = genres == null ? List.of() : genres;
+        platforms = platforms == null ? List.of() : platforms;
+    }
 }

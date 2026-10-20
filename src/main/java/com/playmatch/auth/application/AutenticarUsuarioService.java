@@ -36,6 +36,6 @@ public class AutenticarUsuarioService {
             throw new BusinessException("Credenciais inválidas", HttpStatus.UNAUTHORIZED);
         }
 
-        return new LoginResponse(jwtService.gerarToken(usuario.getEmail()));
+        return new LoginResponse(jwtService.gerarToken(usuario.getId()));
     }
 }

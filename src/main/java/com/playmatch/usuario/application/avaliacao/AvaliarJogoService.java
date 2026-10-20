@@ -3,6 +3,7 @@ package com.playmatch.usuario.application.avaliacao;
 
 import com.playmatch.jogo.domain.Jogo;
 import com.playmatch.jogo.infrastructure.repository.JogoRepository;
+import com.playmatch.shared.application.security.UsuarioAutenticado;
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Usuario;
 import com.playmatch.usuario.infrastructure.dto.avaliacao.AvaliarJogoRequest;
@@ -25,12 +26,14 @@ public class AvaliarJogoService {
 
     private final UsuarioRepository usuarioRepository;
     private final JogoRepository jogoRepository;
+    private final UsuarioAutenticado usuarioAutenticado;
 
     @Transactional
     public void executar(AvaliarJogoRequest request){
         Usuario usuario = usuarioRepository.findById(request.usuarioId())
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
 
+        usuario.validarPermissao(usuarioAutenticado.id());
 
         Jogo jogo = jogoRepository.findById(request.jogoId())
                 .orElseThrow(() -> new BusinessException("Jogo não encontrado", HttpStatus.NOT_FOUND));

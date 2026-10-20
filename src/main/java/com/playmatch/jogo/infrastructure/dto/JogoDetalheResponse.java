@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * The Domain Class JogoDetalheResponse
+ * The DTO JogoDetalheResponse
  *
  * @author Sofia Ferreira de Oliveira
  * @since 01/09/2026

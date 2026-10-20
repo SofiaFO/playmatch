@@ -6,11 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -116,6 +118,43 @@ public class GlobalExceptionHandler {
     ) {
         String mensagem = "O parâmetro '%s' é obrigatório"
                 .formatted(exception.getParameterName());
+
+        ErroResponse response = criarErro(
+                HttpStatus.BAD_REQUEST,
+                "Requisição inválida",
+                mensagem,
+                request
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroResponse> tratarCorpoIlegivel(
+            HttpMessageNotReadableException exception,
+            HttpServletRequest request
+    ) {
+        ErroResponse response = criarErro(
+                HttpStatus.BAD_REQUEST,
+                "Requisição inválida",
+                "O corpo da requisição está ausente ou mal formatado",
+                request
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErroResponse> tratarTipoInvalido(
+            MethodArgumentTypeMismatchException exception,
+            HttpServletRequest request
+    ) {
+        String mensagem = "O valor '%s' é inválido para o parâmetro '%s'"
+                .formatted(exception.getValue(), exception.getName());
 
         ErroResponse response = criarErro(
                 HttpStatus.BAD_REQUEST,

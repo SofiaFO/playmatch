@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * The Domain Class JogoController
+ * The Controller Class JogoController
  *
  * @author Sofia Ferreira de Oliveira
  * @since 26/08/2026
@@ -56,6 +56,6 @@ public class JogoController {
 
     @GetMapping("/externos/{id}")
     public JogoDetalheResponse pesquisaExterno(@PathVariable Long id){
-        return buscarDetalhesJogoService.execute(id);
+        return buscarDetalhesJogoService.executar(id);
     }
 }

@@ -1,7 +1,9 @@
 package com.playmatch.usuario.application;
 
 
+import com.playmatch.shared.application.security.UsuarioAutenticado;
 import com.playmatch.shared.exception.BusinessException;
+import com.playmatch.usuario.domain.Usuario;
 import com.playmatch.usuario.infrastructure.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,13 +23,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DeletarUsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioAutenticado usuarioAutenticado;
 
     @Transactional
     public void executar(UUID usuarioId) {
-        usuarioRepository.findById(usuarioId)
+        Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+
+        usuario.validarPermissao(usuarioAutenticado.id());
 
         usuarioRepository.deleteById(usuarioId);
     }
 }
-

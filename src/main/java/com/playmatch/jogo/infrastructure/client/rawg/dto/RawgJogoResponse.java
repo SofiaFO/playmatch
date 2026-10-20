@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Record {NAME}
+ * The DTO RawgJogoResponse
  *
  * @author Sofia Ferreira de Oliveira
  * @since 27/08/2026
@@ -26,6 +26,11 @@ public record RawgJogoResponse(
 
         List<RawGeneroResponse> genres,
 
-        List<RawPlataformaResponse> platforms
+        List<RawJogoPlataformaResponse> platforms
 ) {
+
+    public RawgJogoResponse {
+        genres = genres == null ? List.of() : genres;
+        platforms = platforms == null ? List.of() : platforms;
+    }
 }

@@ -2,7 +2,7 @@ package com.playmatch.jogo.infrastructure.client.rawg.dto;
 
 
 /**
- * Record {NAME}
+ * The DTO RawPlataformaResponse
  *
  * @author Sofia Ferreira de Oliveira
  * @since 27/08/2026

@@ -1,8 +1,8 @@
 package com.playmatch.usuario.application.avaliacao;
 
 
+import com.playmatch.jogo.application.ImportarJogoService;
 import com.playmatch.jogo.domain.Jogo;
-import com.playmatch.jogo.infrastructure.repository.JogoRepository;
 import com.playmatch.shared.application.security.UsuarioAutenticado;
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Usuario;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AvaliarJogoService {
 
     private final UsuarioRepository usuarioRepository;
-    private final JogoRepository jogoRepository;
+    private final ImportarJogoService importarJogoService;
     private final UsuarioAutenticado usuarioAutenticado;
 
     @Transactional
@@ -35,10 +35,9 @@ public class AvaliarJogoService {
 
         usuario.validarPermissao(usuarioAutenticado.id());
 
-        Jogo jogo = jogoRepository.findById(request.jogoId())
-                .orElseThrow(() -> new BusinessException("Jogo não encontrado", HttpStatus.NOT_FOUND));
+        Jogo jogo = importarJogoService.obterOuImportar(request.jogoId());
 
-        usuario.avaliar(jogo, request.nota());
+        usuario.avaliar(jogo, request.nota(), request.resenha());
 
         usuarioRepository.save(usuario);
     }

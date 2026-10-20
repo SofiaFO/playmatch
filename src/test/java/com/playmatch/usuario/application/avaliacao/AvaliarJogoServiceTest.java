@@ -1,7 +1,7 @@
 package com.playmatch.usuario.application.avaliacao;
 
+import com.playmatch.jogo.application.ImportarJogoService;
 import com.playmatch.jogo.domain.Jogo;
-import com.playmatch.jogo.infrastructure.repository.JogoRepository;
 import com.playmatch.shared.application.security.UsuarioAutenticado;
 import com.playmatch.shared.exception.BusinessException;
 import com.playmatch.usuario.domain.Usuario;
@@ -32,7 +32,7 @@ class AvaliarJogoServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
-    private JogoRepository jogoRepository;
+    private ImportarJogoService importarJogoService;
 
     @Mock
     private UsuarioAutenticado usuarioAutenticado;
@@ -53,7 +53,7 @@ class AvaliarJogoServiceTest {
         when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.of(usuario()));
         when(usuarioAutenticado.id()).thenReturn(UUID.randomUUID());
 
-        assertThatThrownBy(() -> service.executar(new AvaliarJogoRequest(usuarioId, 1L, 5)))
+        assertThatThrownBy(() -> service.executar(new AvaliarJogoRequest(usuarioId, 1L, 5, null)))
                 .isInstanceOf(BusinessException.class)
                 .extracting("httpStatus")
                 .isEqualTo(HttpStatus.FORBIDDEN);
@@ -69,9 +69,9 @@ class AvaliarJogoServiceTest {
 
         when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.of(usuario));
         when(usuarioAutenticado.id()).thenReturn(usuarioId);
-        when(jogoRepository.findById(1L)).thenReturn(Optional.of(jogo));
+        when(importarJogoService.obterOuImportar(1L)).thenReturn(jogo);
 
-        service.executar(new AvaliarJogoRequest(usuarioId, 1L, 4));
+        service.executar(new AvaliarJogoRequest(usuarioId, 1L, 4, "Muito bom"));
 
         verify(usuarioRepository).save(usuario);
         assertThat(usuario.buscarAvaliacao(1L)).isPresent();

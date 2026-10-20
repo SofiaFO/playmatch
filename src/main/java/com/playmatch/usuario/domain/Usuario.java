@@ -50,6 +50,20 @@ public class Usuario {
     )
     private Set<Avaliacao> avaliacoes = new HashSet<>();
 
+    @Builder.Default
+    @Relationship(
+            type = "FAVORITOU",
+            direction = Relationship.Direction.OUTGOING
+    )
+    private Set<JogoSalvo> favoritos = new HashSet<>();
+
+    @Builder.Default
+    @Relationship(
+            type = "QUER_JOGAR",
+            direction = Relationship.Direction.OUTGOING
+    )
+    private Set<JogoSalvo> desejos = new HashSet<>();
+
     public static String normalizarEmail(String email) {
         return email == null ? null : email.trim().toLowerCase();
     }
@@ -122,19 +136,18 @@ public class Usuario {
         }
     }
 
-    public void avaliar(Jogo jogo, Integer nota) {
-        avaliacoes.stream()
-                .filter(avaliacao ->
-                        Objects.equals(
-                                avaliacao.getJogo().getId(),
-                                jogo.getId()
-                        )
-                )
-                .findFirst()
+    /**
+     * Avalia o jogo, ou atualiza a avaliação se ele já foi avaliado.
+     * Quem avaliou já jogou, então o jogo sai da lista de desejos.
+     */
+    public void avaliar(Jogo jogo, Integer nota, String resenha) {
+        buscarAvaliacao(jogo.getId())
                 .ifPresentOrElse(
-                        avaliacao -> avaliacao.atualizarNota(nota),
-                        () -> avaliacoes.add(new Avaliacao(nota, jogo))
+                        avaliacao -> avaliacao.atualizar(nota, resenha),
+                        () -> avaliacoes.add(new Avaliacao(nota, resenha, jogo))
                 );
+
+        desejos.removeIf(salvo -> Objects.equals(salvo.getJogo().getId(), jogo.getId()));
     }
 
     public Optional<Avaliacao> buscarAvaliacao(Long jogoId) {
@@ -148,10 +161,10 @@ public class Usuario {
                 .findFirst();
     }
 
-    public void atualizarAvaliacao(Long jogoId, Integer nota) {
+    public void atualizarAvaliacao(Long jogoId, Integer nota, String resenha) {
         Optional<Avaliacao> avaliacao = buscarAvaliacao(jogoId);
         if (avaliacao.isPresent()) {
-            avaliacao.get().atualizarNota(nota);
+            avaliacao.get().atualizar(nota, resenha);
         } else {
             throw new BusinessException("Avaliação não encontrada", HttpStatus.NOT_FOUND);
         }
@@ -164,5 +177,64 @@ public class Usuario {
         } else {
             throw new BusinessException("Avaliação não encontrada", HttpStatus.NOT_FOUND);
         }
+    }
+
+    public void favoritar(Jogo jogo) {
+        if (contem(favoritos, jogo.getId())) {
+            throw new BusinessException("Este jogo já está nos seus favoritos", HttpStatus.CONFLICT);
+        }
+
+        favoritos.add(new JogoSalvo(jogo));
+    }
+
+    public void desfavoritar(Long jogoId) {
+        if (!favoritos.removeIf(salvo -> Objects.equals(salvo.getJogo().getId(), jogoId))) {
+            throw new BusinessException("Este jogo não está nos seus favoritos", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public void adicionarDesejo(Jogo jogo) {
+        if (buscarAvaliacao(jogo.getId()).isPresent()) {
+            throw new BusinessException(
+                    "Você já avaliou este jogo, então ele não pode entrar na lista de desejos",
+                    HttpStatus.UNPROCESSABLE_CONTENT
+            );
+        }
+        if (contem(desejos, jogo.getId())) {
+            throw new BusinessException("Este jogo já está na sua lista de desejos", HttpStatus.CONFLICT);
+        }
+
+        desejos.add(new JogoSalvo(jogo));
+    }
+
+    public void removerDesejo(Long jogoId) {
+        if (!desejos.removeIf(salvo -> Objects.equals(salvo.getJogo().getId(), jogoId))) {
+            throw new BusinessException("Este jogo não está na sua lista de desejos", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public void adicionarNaLista(TipoLista tipo, Jogo jogo) {
+        switch (tipo) {
+            case FAVORITOS -> favoritar(jogo);
+            case DESEJOS -> adicionarDesejo(jogo);
+        }
+    }
+
+    public void removerDaLista(TipoLista tipo, Long jogoId) {
+        switch (tipo) {
+            case FAVORITOS -> desfavoritar(jogoId);
+            case DESEJOS -> removerDesejo(jogoId);
+        }
+    }
+
+    public Set<JogoSalvo> getLista(TipoLista tipo) {
+        return switch (tipo) {
+            case FAVORITOS -> favoritos;
+            case DESEJOS -> desejos;
+        };
+    }
+
+    private static boolean contem(Set<JogoSalvo> lista, Long jogoId) {
+        return lista.stream().anyMatch(salvo -> Objects.equals(salvo.getJogo().getId(), jogoId));
     }
 }

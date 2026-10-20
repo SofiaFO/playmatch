@@ -1,6 +1,7 @@
 package com.playmatch.jogo.infrastructure.client.rawg;
 
 
+import com.playmatch.jogo.domain.Jogo;
 import com.playmatch.jogo.infrastructure.client.rawg.dto.RawGeneroResponse;
 import com.playmatch.jogo.infrastructure.client.rawg.dto.RawJogoPlataformaResponse;
 import com.playmatch.jogo.infrastructure.client.rawg.dto.RawPlataformaResponse;
@@ -37,6 +38,19 @@ public final class RawgJogoMapper {
 
     public static JogoDetalheResponse toDetalheResponse(RawgJogoDetalhesResponse jogo) {
         return new JogoDetalheResponse(
+                jogo.id(),
+                jogo.name(),
+                jogo.description(),
+                jogo.released(),
+                jogo.backgroundImage(),
+                jogo.rating(),
+                nomesGeneros(jogo.genres()),
+                nomesPlataformas(jogo.platforms())
+        );
+    }
+
+    public static Jogo toDomain(RawgJogoDetalhesResponse jogo) {
+        return Jogo.importar(
                 jogo.id(),
                 jogo.name(),
                 jogo.description(),

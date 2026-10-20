@@ -36,7 +36,7 @@ public class AtualizarAvaliacaoService {
         jogoRepository.findById(request.jogoId())
                 .orElseThrow(() -> new BusinessException("Jogo não encontrado", HttpStatus.NOT_FOUND));
 
-        usuario.atualizarAvaliacao(request.jogoId(), request.nota());
+        usuario.atualizarAvaliacao(request.jogoId(), request.nota(), request.resenha());
 
         usuarioRepository.save(usuario);
     }

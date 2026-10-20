@@ -4,6 +4,7 @@ package com.playmatch.usuario.infrastructure.dto.avaliacao;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
 
@@ -24,5 +25,8 @@ public record AtualizarAvaliacaoRequest(
         @NotNull
         @Min(value = 1, message = "A nota deve ser no mínimo 1")
         @Max(value = 5, message = "A nota deve ser no máximo 5")
-        Integer nota
+        Integer nota,
+
+        @Size(max = 2000, message = "A resenha deve conter no máximo 2000 caracteres")
+        String resenha
 ){}
